@@ -25,30 +25,32 @@ Route::namespace('Admin')->middleware('auth.admin')->group(function() {
     Route::get('/', 'IndexController@layout')->name('admin.layout');
     // 后台首页
     Route::get('/index', 'IndexController@index')->name('admin.index'); 	
+	// 图标
+    Route::get('icons', 'IndexController@icons')->name('admin.icons');
 });
 
-Route::namespace('Admin')->prefix('admin')->middleware(['auth:admin', 'permission:system.manage'])->group(function() {
+Route::namespace('Admin')->middleware(['auth:admin', 'permission:system.manage'])->group(function() {
   
 	// 数据表格接口
-    Route::get('data', 'IndexController@data')->name('admin.data')->middleware('permission:system.role|system.user|system.permission');
+    Route::get('data', 'IndexController@data')->name('admin.data')->middleware('permission:system.role|system.admin|system.permission');
 
     // 用户管理
-    Route::prefix('user')->middleware(['permission:system.user'])->group(function() {
-        Route::get('index', 'UserController@index')->name('admin.user');
+    Route::prefix('admin')->group(function() {
+        Route::get('index', 'UserController@index')->name('admin.admin');
         // 添加
-        Route::get('create', 'UserController@create')->name('admin.user.create')->middleware('permission:system.user.create');
-        Route::post('store', 'UserController@store')->name('admin.user.store')->middleware('permission:system.user.create');
+        Route::get('create', 'UserController@create')->name('admin.admin.create')->middleware('permission:system.admin.create');
+        Route::post('store', 'UserController@store')->name('admin.admin.store')->middleware('permission:system.admin.create');
         // 编辑
-        Route::get('{id}/edit', 'UserController@edit')->name('admin.user.edit')->middleware('permission:system.user.edit');
-        Route::put('{id}/update', 'UserController@update')->name('admin.user.update')->middleware('permission:system.user.edit');
+        Route::get('{id}/edit', 'UserController@edit')->name('admin.admin.edit')->middleware('permission:system.admin.edit');
+        Route::put('{id}/update', 'UserController@update')->name('admin.admin.update')->middleware('permission:system.admin.edit');
         // 删除
-        Route::delete('destroy', 'UserController@destroy')->name('admin.user.destroy')->middleware('permission:system.user.destroy');
+        Route::delete('destroy', 'UserController@destroy')->name('admin.admin.destroy')->middleware('permission:system.admin.destroy');
         // 分配角色
-        Route::get('{id}/role', 'UserController@role')->name('admin.user.role')->middleware('permission:system.user.role');
-        Route::put('{id}/assignRole', 'UserController@assignRole')->name('admin.user.assignRole')->middleware('permission:system.user.role');
+        Route::get('{id}/role', 'UserController@role')->name('admin.admin.role')->middleware('permission:system.admin.role');
+        Route::put('{id}/assignRole', 'UserController@assignRole')->name('admin.admin.assignRole')->middleware('permission:system.admin.role');
         // 分配权限
-        Route::get('{id}/permission', 'UserController@permission')->name('admin.user.permission')->middleware('permission:system.user.permission');
-        Route::put('{id}/assignPermission', 'UserController@assignPermission')->name('admin.user.assignPermission')->middleware('permission:system.user.permission');
+        Route::get('{id}/permission', 'UserController@permission')->name('admin.admin.permission')->middleware('permission:system.admin.permission');
+        Route::put('{id}/assignPermission', 'UserController@assignPermission')->name('admin.admin.assignPermission')->middleware('permission:system.admin.permission');
     });
 
     // 角色管理

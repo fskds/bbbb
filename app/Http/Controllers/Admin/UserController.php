@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Admin\Admin;
 use App\Models\Admin\Role;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UserCreateRequest;
-use App\Http\Requests\UserUpdateRequest;
+use App\Http\Requests\AdminCreateRequest;
+use App\Http\Requests\AdminUpdateRequest;
 
 class UserController extends Controller
 {
@@ -79,7 +79,7 @@ class UserController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserUpdateRequest $request, $id)
+    public function update(AdminUpdateRequest $request, $id)
     {
         $user = Admin::findOrFail($id);
 
@@ -144,9 +144,13 @@ class UserController extends Controller
         if (empty($ids)) {
             return response()->json(['code' => 1, 'msg' => '请选择删除项']);
         }
-        if (Admin::destroy($ids)) {
-            return response()->json(['code' => 0, 'msg' => '删除成功']);
-        }
+		if(in_array(Auth::user()->id,$ids) || in_array(1,$ids)){
+			return response()->json(['code' => 1, 'msg' => '不可删除自己']);
+		}else{
+			if (Admin::destroy($ids)) {
+				return response()->json(['code' => 0, 'msg' => '删除成功']);
+			}
+		}
         return response()->json(['code' => 1, 'msg' => '删除失败']);
     }
 

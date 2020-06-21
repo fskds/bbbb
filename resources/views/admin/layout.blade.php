@@ -54,7 +54,7 @@
                         <cite>{{Auth::guard('admin')->user()->name}}</cite>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="admin/user/{{Auth::guard('admin')->user()->id}}/personalEdit">个人信息</a></dd>
+                        <dd><a lay-href="admin/admin/{{Auth::guard('admin')->user()->id}}/personalEdit">个人信息</a></dd>
                         <hr>
                         <dd style="text-align: center;"><a href="{{route('admin.logout')}}">退出</a></dd>
                     </dl>

@@ -49,16 +49,16 @@ class AdminsTableSeeder extends Seeder
                 'icon_id' => '100',
                 'child' => [
                     [
-                        'name' => 'system.user',
+                        'name' => 'system.admin',
                         'display_name' => '用户管理',
-                        'route' => 'admin.user',
+                        'route' => 'admin.admin',
                         'icon_id' => '123',
                         'child' => [
-                            ['name' => 'system.user.create', 'display_name' => '添加用户', 'route' => 'admin.user.store'],
-                            ['name' => 'system.user.edit', 'display_name' => '编辑用户', 'route' => 'admin.user.update'],
-                            ['name' => 'system.user.destroy', 'display_name' => '删除用户', 'route' => 'admin.user.destroy'],
-                            ['name' => 'system.user.role', 'display_name' => '分配角色', 'route' => 'admin.user.assignRole'],
-                            ['name' => 'system.user.permission', 'display_name' => '分配权限', 'route' => 'admin.user.assignPermission'],
+                            ['name' => 'system.admin.create', 'display_name' => '添加用户', 'route' => 'admin.admin.store'],
+                            ['name' => 'system.admin.edit', 'display_name' => '编辑用户', 'route' => 'admin.admin.update'],
+                            ['name' => 'system.admin.destroy', 'display_name' => '删除用户', 'route' => 'admin.admin.destroy'],
+                            ['name' => 'system.admin.role', 'display_name' => '分配角色', 'route' => 'admin.admin.assignRole'],
+                            ['name' => 'system.admin.permission', 'display_name' => '分配权限', 'route' => 'admin.admin.assignPermission'],
                         ]
                     ],
                     [
