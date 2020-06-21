@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Admin\Icon;
+use App\Models\Icon;
 use App\Models\Admin\Role;
 use App\Models\Admin\Admin;
 use App\Models\Admin\Permission;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\Controller;
 
 class IndexController extends Controller
 {
@@ -16,6 +16,10 @@ class IndexController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+	public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
     public function layout()
     {
         return view('admin.layout');

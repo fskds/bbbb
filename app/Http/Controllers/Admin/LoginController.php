@@ -41,8 +41,13 @@ class LoginController extends Controller
 	
 	public function showLoginForm()
     {
-        return view('admin.login');
+        return view('admin.login.login');
     }
+	
+	protected function guard() 
+    { 
+        return auth()->guard('admin'); 
+    } 
 
 	public function username()
     {
