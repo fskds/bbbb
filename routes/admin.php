@@ -20,7 +20,7 @@ Route::namespace('Admin')->group(function() {
     Route::get('logout', 'LoginController@logout')->name('admin.logout');
 });
 
-Route::namespace('Admin')->middleware('auth.admin')->group(function() {
+Route::namespace('Admin')->middleware('auth.admin' ,'logs')->group(function() {
     // 后台布局
     Route::get('/', 'IndexController@layout')->name('admin.layout');
     // 后台首页
@@ -29,7 +29,7 @@ Route::namespace('Admin')->middleware('auth.admin')->group(function() {
     Route::get('icons', 'IndexController@icons')->name('admin.icons');
 });
 
-Route::namespace('Admin')->middleware(['auth:admin', 'permission:system.manage'])->group(function() {
+Route::namespace('Admin')->middleware(['auth:admin', 'permission:system.manage','logs'])->group(function() {
   
 	// 数据表格接口
     Route::get('data', 'IndexController@data')->name('admin.data')->middleware('permission:system.role|system.admin|system.permission');

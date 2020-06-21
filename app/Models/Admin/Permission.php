@@ -4,6 +4,7 @@ namespace App\Models\Admin;
 
 class Permission extends \Spatie\Permission\Models\Permission
 {
+	protected $guard_name = 'web';
     // 菜单图标
     public function icon()
     {

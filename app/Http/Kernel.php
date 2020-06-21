@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
 		'guest.admin' => \App\Http\Middleware\GuestAdmin::class,
 		'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role'       => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+		'logs' => \App\Http\Middleware\OperationLogs::class,
     ];
 }
