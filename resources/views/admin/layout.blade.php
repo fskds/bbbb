@@ -51,10 +51,10 @@
                 </li>
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;">
-                        <cite>{{Auth::user()->name}}</cite>
+                        <cite>{{Auth::guard('admin')->user()->name}}</cite>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="admin/user/{{Auth::user()->id}}/personalEdit">个人信息</a></dd>
+                        <dd><a lay-href="admin/user/{{Auth::guard('admin')->user()->id}}/personalEdit">个人信息</a></dd>
                         <hr>
                         <dd style="text-align: center;"><a href="{{route('admin.logout')}}">退出</a></dd>
                     </dl>
@@ -89,7 +89,7 @@
                         </dl>
                     </li>
                     @foreach($menus as $menu)
-                        @can($menu->name)
+                        @if(Auth::guard('admin')->user()->can($menu->name))
                         <li data-name="{{$menu->name}}" class="layui-nav-item">
                             <a href="javascript:;" lay-tips="{{$menu->display_name}}" lay-direction="2">
                                 <i class="layui-icon {{$menu->icon->class??''}}"></i>
@@ -98,16 +98,16 @@
                             @if($menu->childs->isNotEmpty())
                             <dl class="layui-nav-child">
                                 @foreach($menu->childs as $subMenu)
-                                    @can($subMenu->name)
+                                    @if(Auth::guard('admin')->user()->can($subMenu->name))
                                     <dd data-name="{{$subMenu->name}}" >
                                         <a lay-href="{{ route($subMenu->route) }}">{{$subMenu->display_name}}</a>
                                     </dd>
-                                    @endcan
+                                    @endif
                                 @endforeach
                             </dl>
                             @endif
                         </li>
-                        @endcan
+                        @endif
                     @endforeach
                 </ul>
             </div>

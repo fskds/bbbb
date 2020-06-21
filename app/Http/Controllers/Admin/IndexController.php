@@ -16,10 +16,6 @@ class IndexController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-	public function __construct()
-    {
-        $this->middleware('auth:admin');
-    }
     public function layout()
     {
         return view('admin.layout');
