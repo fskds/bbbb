@@ -22,6 +22,7 @@ class CreateAdminsTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->uuid('uuid');
+			$table->softDeletes();
             $table->timestamps();
         });
     }

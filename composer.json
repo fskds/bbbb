@@ -12,9 +12,12 @@
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
+        "ifsnop/mysqldump-php": "^2.9",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
+        "socialiteproviders/qq": "^3.0",
+        "socialiteproviders/weixin": "^4.0",
         "spatie/laravel-permission": "^3.13"
     },
     "require-dev": {

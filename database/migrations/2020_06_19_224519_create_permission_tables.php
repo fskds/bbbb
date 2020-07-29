@@ -24,11 +24,13 @@ class CreatePermissionTables extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('guard_name');
-            $table->string('display_name');
+            $table->string('display_name',20);
             $table->string('route')->nullable()->comment('路由名称');
-            $table->integer('icon_id')->nullable()->comment('图标ID');
-            $table->integer('parent_id')->default(0);
+            $table->string('icon',30)->nullable()->comment('图标ID');
+            $table->integer('pid')->default(0);
             $table->integer('sort')->default(0)->comment('排序');
+            $table->boolean('status')->default(1)->comment('读取子菜单状态');
+			$table->softDeletes();
             $table->timestamps();
         });
 
@@ -37,6 +39,7 @@ class CreatePermissionTables extends Migration
             $table->string('name');
             $table->string('guard_name');
             $table->string('display_name');
+			$table->softDeletes();
             $table->timestamps();
         });
 

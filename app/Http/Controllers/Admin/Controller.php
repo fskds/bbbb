@@ -14,7 +14,7 @@ class Controller extends BaseController
 	/**
      * 处理权限分类
      */
-    public function tree($list = [], $pk = 'id', $pid = 'parent_id', $child = '_child', $root = 0)
+    public function tree($list = [], $pk = 'id', $pid = 'pid', $child = '_child', $root = 0)
     {
         if (empty($list)) {
             $list = Permission::get()->toArray();

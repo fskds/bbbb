@@ -84,6 +84,7 @@ class UserController extends Controller
         $user = Admin::findOrFail($id);
 
         $data = $request->except('password');
+
         if ($request->get('password')) {
             $data['password'] = bcrypt($request->get('password'));
         }

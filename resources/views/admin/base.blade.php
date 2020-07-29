@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+	<link rel="stylesheet" href="/css/xadmin.css">
 </head>
 <body>
 

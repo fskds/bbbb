@@ -83,13 +83,13 @@
                     location.href = '/admin/permission/' + data.id + '/edit';
                 } else if (layEvent === 'children') {
                     var pid = $("#returnParent").attr("pid");
-                    if (data.parent_id != 0) {
-                        $("#returnParent").attr("pid",pid + '_' + data.parent_id);
+                    if (data.pid != 0) {
+                        $("#returnParent").attr("pid",pid + '_' + data.pid);
                     }
                     dataTable.reload({
                         where: {
                             model: "permission",
-                            parent_id: data.id
+                            pid: data.id
                         },
                         page: {
                             curr: 1
@@ -107,15 +107,15 @@
                 var pid = $(this).attr("pid");
                 if (pid != '0') {
                     ids = pid.split('_');
-                    parent_id = ids.pop();
+                    pid = ids.pop();
                     $(this).attr("pid", ids.join('_'));
                 } else {
-                    parent_id = pid;
+                    pid = pid;
                 }
                 dataTable.reload({
                     where: {
                         model: "permission",
-                        parent_id: parent_id
+                        pid: pid
                     },
                     page: {
                         curr: 1

@@ -18,7 +18,7 @@ class IndexController extends Controller
      */
     public function layout()
     {
-        return view('admin.layout');
+        return view('backend.layout');
     }
 
     /**
@@ -28,7 +28,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return view('admin.index.index');
+        return view('backend.index.index');
     }
 
     /**
@@ -50,7 +50,7 @@ class IndexController extends Controller
                 break;
             case 'permission':
                 $query = new Permission();
-                $query = $query->where('parent_id', $request->get('parent_id', 0))->with('icon');
+                $query = $query->where('pid', $request->get('pid', 0))->with('icon');
                 break;
             default:
                 $query = new User();

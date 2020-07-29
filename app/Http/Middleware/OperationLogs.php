@@ -5,8 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\Admin\OperationLog;
-use App\Models\Admin\Permission;
+use App\Models\Backend\OperationLog;
+use App\Models\Backend\Admin\Permission;
 
 /**
  * 全局的用户操作日志中间件
@@ -20,7 +20,7 @@ class OperationLogs
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+public function handle($request, Closure $next)
     {
         $user_id = 0;
         $user_name = '';
@@ -36,6 +36,10 @@ class OperationLogs
             }
             $permisson = new Permission();
             $attributesArr = $permisson->getAllCacheAttributes();
+            foreach ($attributesArr as $key => $item) {
+                unset($attributesArr[$key]['deleted_at']);
+            }
+
             $allName       = $this->getAllName($attributesArr, $router_as);
             $operate_name  = $allName['operateName'];
             if (empty($operate_name)) {
@@ -74,27 +78,27 @@ class OperationLogs
             'operateName' => '',
         ];
 
-        $parent_id = 0;
+        $pid = 0;
         foreach ($operateArr as $op) {
             if (array_key_exists($needle, array_flip($op))) {
-               $parent_id = $op['parent_id'];
+               $pid = $op['pid'];
                $return['operateName'] = $op['display_name'];
                break;
             }
         }
 
-        if ($parent_id) {
+        if ($pid) {
             foreach ($operateArr as $op) {
-                if ($op['id'] == $parent_id) {
-                    $parent_id = $op['parent_id'];
+                if ($op['id'] == $pid) {
+                    $pid = $op['pid'];
                     $return['subMenuName'] = $op['display_name'];
                     break;
                 }
             }
         }
-        if ($parent_id) {
+        if ($pid) {
             foreach ($operateArr as $op) {
-                if ($op['id'] == $parent_id) {
+                if ($op['id'] == $pid) {
                     $return['menuName'] = $op['display_name'];
                     break;
                 }
