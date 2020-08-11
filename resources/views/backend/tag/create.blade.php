@@ -52,7 +52,6 @@
 							parent.layui.table.reload('currentTableId'); //重载表格	
 							parent.layer.close(index); //再执行关闭	
 							parent.layer.msg(res.msg, {icon: res.code});
-                            parent.location.reload(); //重载界面
 						}else{
 							parent.layer.msg(res.msg, {icon: res.code});
 						}

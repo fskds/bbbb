@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Backend\Website;
 
 use App\Models\Backend\Website;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Admin\Controller;
+use App\Http\Controllers\Controller;
 
 class SiteController extends Controller
 {

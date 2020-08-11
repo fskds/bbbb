@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/upload/{path}/{name}', 'Website\ImageController@index');
 Route::get('/', 'HomeController@index');
 
 Auth::routes();

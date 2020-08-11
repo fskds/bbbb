@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Tag;
 
-use App\Models\Backend\Tag;
+use App\Models\Backend\Content\Tag;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\NavCreateRequest;

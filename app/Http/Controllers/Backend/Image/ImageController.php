@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Backend\Image;
 
-use App\Models\Backend\Image;
+use App\Models\Backend\Content\Image;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {
@@ -37,53 +38,22 @@ class ImageController extends Controller
      */
     public function store(Request $request)
     {
-        if ($_POST) {
-            //上传图片具体操作
-            $file_name = $_FILES['file']['name'];
-            //$file_type = $_FILES["file"]["type"];
-            $file_tmp = $_FILES["file"]["tmp_name"];
-            $file_error = $_FILES["file"]["error"];
-            $file_size = $_FILES["file"]["size"];
+        $data = $request->all();
+        $filename = public_path('upload/'.$request->input('path').'/'.$request->input('name'));
+        $newfile_path = $request->input('path').'/'.$request->input('name');
+        $file = file_get_contents($filename);
 
-            if ($file_error > 0) { // 出错
-                $message = $file_error;
-            } elseif($file_size > 1048576) { // 文件太大了
-                $message = "上传文件不能大于1MB";
-            }else{
-                $image_size = getimagesize($file_tmp);
-                $size = $image_size[0]."X".$image_size[1];
-                $date = date('Ymd');
-                $file_name_arr = explode('.', $file_name);
-                $new_file_name = date('YmdHis') .rand(1000,9999) . '.' . $file_name_arr[1];
-                $path = "upload/".$date."/";
-                $file_path = $path . $new_file_name;
-                if (file_exists($file_path)) {
-                    $message = "此文件已经存在啦";
-                } else {
-                    //TODO 判断当前的目录是否存在，若不存在就新建一个!
-                    if (!is_dir($path)){mkdir($path,0777);}
-                    $upload_result = move_uploaded_file($file_tmp, $file_path); 
-                    //此函数只支持 HTTP POST 上传的文件
-                    if ($upload_result) {
-                        $image = new Image();
-                        $image->name = $new_file_name;
-                        $image->path = $path;
-                        $image->size = $size;
-                        $image->title = $file_name_arr[0];
-                        $image->save();
-                        $status = 1;
-                        $message = $file_path;
-                    } else {
-                        $status = 2;
-                        $message = "文件上传失败，请稍后再尝试";
-                    }
-                }
-            }
+        if (Image::create($data) ) {
+            Storage::disk('upload')->put($newfile_path,$file);
+            
+            $status = 1;
+            $message = "成功上传";
         } else {
-            $status = 6;
-            $message = "参数错误";
+            $status = 2;
+            $message = "文件上传失败，请稍后再尝试";
         }
-        return response()->json(['code' => $status, 'msg' => $message]);
+        $re = unlink($filename);
+        return response()->json(['code' => $status, 'msg' => $message ]);
     }
 
     /**
@@ -106,7 +76,6 @@ class ImageController extends Controller
     public function edit($id)
     {
         $image  = Image::findOrFail($id);
-        //$permissions = $this->tree();
 
         return view('backend.image.edit', compact('image'));
     }
@@ -118,14 +87,32 @@ class ImageController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(NavUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $image = Image::findOrFail($id);
-        $data       = $request->all();
-        if ($image->update($data)) {
-            return response()->json(['code' => 1, 'msg' => '更新菜单成功']);
+        $image  = Image::findOrFail($id);
+        $data = $request->all();
+        $name = $request->input('name');
+        if($name == $image->name){
+            if ($image->update($data)) {
+                $status = 1;
+                $message = "成功上传";
+            }
+        }else{
+            $filename = public_path('upload/'.$request->input('path').'/'.$request->input('name'));
+            $newfile_path = $image->path.'/'.$image->name;
+            $file = file_get_contents($filename);
+            Storage::disk('upload')->put($newfile_path,$file);
+            $data['name'] = $image->name;
+            if ($image->update($data) ) {
+                $status = 1;
+                $message = "成功上传";
+            } else {
+                $status = 2;
+                $message = "文件上传失败，请稍后再尝试";
+            }
+            $re = unlink($filename);
         }
-        return response()->json(['code' => 2, 'msg' => '系统错误']);
+        return response()->json(['code' => $status, 'msg' => $message ]);
     }
 
     /**
@@ -142,11 +129,11 @@ class ImageController extends Controller
         }
         $image = Image::find($ids[0]);
         if (!$image) {
-            return response()->json(['code' => 7, 'msg' => '菜单不存在']);
+            return response()->json(['code' => 7, 'msg' => '图片不存在']);
         }
-        // 如果有子权限，则禁止删除
-        if (Image::where('pid', $ids[0])->first()) {
-            return response()->json(['code' => 5, 'msg' => '存在子菜单禁止删除']);
+        // 如果有文章使用，则禁止删除
+        if (Image::where('pid', $ids[0])->first()->Article()) {
+            return response()->json(['code' => 5, 'msg' => '存在文章引用禁止删除']);
         }
         if ($image->delete()) {
             return response()->json(['code' => 1, 'msg' => '删除成功']);
@@ -159,9 +146,9 @@ class ImageController extends Controller
 		$image = Image::withTrashed()->find($ids);
 		
 		if ($image->restore()){
-			return response()->json(['code' => 1, 'msg' => '恢复导航成功']);
+			return response()->json(['code' => 1, 'msg' => '恢复图片成功']);
 		}
-        return response()->json(['code' => 2, 'msg' => '恢复导航失败']);
+        return response()->json(['code' => 2, 'msg' => '恢复图片失败']);
     }
     function upload(Request $request)
     {
@@ -172,36 +159,43 @@ class ImageController extends Controller
             $file_tmp = $_FILES["file"]["tmp_name"];
             $file_error = $_FILES["file"]["error"];
             $file_size = $_FILES["file"]["size"];
-
+            //$rule = ['jpg', 'jpeg', 'png', 'gif'];
             if ($file_error > 0) { // 出错
+                $status = 2;
                 $message = $file_error;
             } elseif($file_size > 1048576) { // 文件太大了
+                $status = 2;
                 $message = "上传文件不能大于1MB";
-            }else{
+            } else{
+                $image_size = getimagesize($file_tmp);
+                $size = $image_size[0]."X".$image_size[1];
                 $date = date('Ymd');
                 $file_name_arr = explode('.', $file_name);
                 $new_file_name = date('YmdHis') .rand(1000,9999) . '.' . $file_name_arr[1];
-                $path = "upload/".$date."/";
-                $file_path = $path . $new_file_name;
+                $path = public_path('upload/'.$date);
+                $file_path = $path .'/'. $new_file_name;
                 if (file_exists($file_path)) {
+                    $status = 2;
                     $message = "此文件已经存在啦";
                 } else {
-                //TODO 判断当前的目录是否存在，若不存在就新建一个!
-                if (!is_dir($path)){mkdir($path,0777);}
+                    // TODO 判断当前的目录是否存在，若不存在就新建一个!
+                    if (!is_dir($path)){mkdir($path,0777);}
                     $upload_result = move_uploaded_file($file_tmp, $file_path); 
-                    //此函数只支持 HTTP POST 上传的文件
-                    if ($upload_result) {
+                    // 此函数只支持 HTTP POST 上传的文件
+                     if ($upload_result) {
                         $status = 1;
-                        $message = $file_path;
+                        $message = array('name' => $new_file_name, 'path' => $date, 'size' => $size, 'title' => $file_name_arr[0]);
                     } else {
+                        $status = 2;
                         $message = "文件上传失败，请稍后再尝试";
                     }
                 }
             }
         } else {
+            $status = 6;
             $message = "参数错误";
         }
-        return response()->json(['code' => 2, 'msg' => $message]);
+        return response()->json(['code' => $status, 'msg' => $message]);
     }
 
     public function data(Request $request)

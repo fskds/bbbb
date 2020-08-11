@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Nav;
 
-use App\Models\Backend\Nav;
+use App\Models\Backend\Content\Nav;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\NavCreateRequest;

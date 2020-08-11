@@ -95,7 +95,7 @@
                 {checkbox: true,fixed: true},
                 {field: 'id', title: 'id',width:40 ,align: 'center'},
                 {field: 'name', title: '图片' , templet:function(d){
-                    return "<img src='"+d.path+"/"+d.name+"'>";
+                    return "<img src='/upload/"+d.path+"/"+d.name+"'>";
                 }},
                 {field: 'title', title: '标题',width:150},
                 {field: 'size', title: '尺寸',width:150},
@@ -131,7 +131,7 @@
 				,layEvent = obj.event; // 获得 lay-event 对应的值 
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加用户',
+                    title: '添加图片',
                     type: 2,
                     shade: 0.2,
                     shadeClose: false,
@@ -179,12 +179,12 @@
                         {checkbox: true,fixed: true},
                         {field: 'id', title: 'id',width:40 ,align: 'center'},
                         {field: 'name', title: '图片' , templet:function(d){
-                            return "";
+                            return "<img src='/upload/"+d.path+"/"+d.name+"'>";
                         }},
                         {field: 'title', title: '标题',width:150},
                         {field: 'size', title: '尺寸',width:150},
-                        {templet: '#delTableBar',width: 150, align: 'center', title: '操作'}
-					]],
+                        {templet: '#currentTableBar',width: 150, align: 'center', title: '操作'}
+                    ]],
 				});
 				
 			}else if (obj.event === 'toolbar') {
@@ -195,20 +195,15 @@
                         {checkbox: true,fixed: true},
                         {field: 'id', title: 'id',width:40 ,align: 'center'},
                         {field: 'name', title: '图片' , templet:function(d){
-                            return "<img src=''>";
+                            return "<img src='/upload/"+d.path+"/"+d.name+"'>";
                         }},
                         {field: 'title', title: '标题',width:150},
                         {field: 'size', title: '尺寸',width:150},
                         {templet: '#currentTableBar',width: 150, align: 'center', title: '操作'}
-					]],
+                    ]],
 				});
 				
 			}
-        });
-
-        //监听表格复选框选择
-        table.on('checkbox(currentTableId)', function (obj) {
-            console.log(obj)
         });
 
         table.on('tool(currentTableId)', function (obj) {
@@ -216,7 +211,7 @@
 				,layEvent = obj.event; // 获得 lay-event 对应的值
 			if (obj.event === 'edit') {  // 监听添加操作
                 var index = layer.open({
-                    title: '编辑用户',
+                    title: '编辑图片',
                     type: 2,
                     shade: 0.2,
                     shadeClose: false,
@@ -230,45 +225,8 @@
 					},
 
                 });
-            } else if (layEvent === 'role') {
-				var index = layer.open({
-                    title: '更新用户 ' + data.name + '[' + data.username + '] 角色',
-                    type: 2,
-                    shade: 0.2,
-                    shadeClose: false,
-                    area: ['450px', '600px'],
-                    content: '/admin/image/' + data.id + '/role',
-					btn: ['确定', '取消'],
-					yes: function(index, layero){
-					//点击确认触发 iframe 内容中的按钮提交
-						var submit = layero.find('iframe').contents().find("#rolesaveBtn");
-						submit.click();
-					},
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (layEvent === 'permission') {
-				var index = layer.open({
-                    title: '更新用户 ' + data.name + '[' + data.username + '] 权限',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: false,
-                    area: ['800px', '650px'],
-                    content: '/admin/image/' + data.id + '/permission',
-					btn: ['确定', '取消'],
-					yes: function(index, layero){
-					//点击确认触发 iframe 内容中的按钮提交
-					var submit = layero.find('iframe').contents().find("#permissionsaveBtn");
-						submit.click();
-					},
-                });
-				$(window).on("resize", function () {
-                    layer.full(index);
-                });
             } else if (layEvent === 'delete') {
-				layer.confirm('真的删除行么', function (index) {
+				layer.confirm('真的删除图片么', function (index) {
 					$.post("{{ route('site.image.destroy') }}",{_method:'delete',_token:'{{csrf_token()}}',ids: [data.id]},function (res) {
                             if (res.code==1){
                                 obj.del(); //删除对应行（tr）的DOM结构

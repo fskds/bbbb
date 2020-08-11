@@ -194,9 +194,9 @@ Route::namespace('Backend\Image')->middleware(['auth:admin','logs','permission:s
     Route::prefix('image')->group(function() {
 		Route::get('/', 'ImageController@index')->name('site.image');
 		Route::get('data', 'ImageController@data')->name('site.image.data');
+        Route::post('upload', 'ImageController@upload')->name('site.image.upload');
 		//添加
         Route::get('create', 'ImageController@create')->name('site.image.create')->middleware('permission:site.image.create');
-        Route::post('storeimg', 'ImageController@data')->name('site.image.storeimg')->middleware('permission:site.image.create');
         Route::post('store', 'ImageController@store')->name('site.image.store')->middleware('permission:site.image.create');
 		//编辑
         Route::get('{id}/edit', 'ImageController@edit')->name('site.image.edit')->middleware('permission:site.image.edit');

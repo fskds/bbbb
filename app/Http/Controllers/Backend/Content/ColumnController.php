@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Backend\Content;
 
-use App\Models\Backend\Nav;
+use App\Models\Backend\Content\Nav;
+use App\Models\Backend\Content\Column;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class ColumnController extends Controller
      */
     public function index()
     {
-        return view('backend.Column.Column');
+        return view('backend.column.column');
     }
 
     /**
@@ -25,8 +26,17 @@ class ColumnController extends Controller
      */
     public function create()
     {
-
-        return view('backend.Column.create', compact('navs'));
+        $navs = Nav::where('pid', 0)
+                ->with(['child' => function($query){
+                    $query->orderBy('sort', 'desc')
+                        ->with(['child' => function($query){
+                            $query->orderBy('sort', 'desc')
+                                ->with(['child' => function($query){
+                                    $query->orderBy('sort', 'desc');
+                                }]);
+                        }]);
+                }])->orderBy('sort', 'desc')->get();
+        return view('backend.column.create', compact('navs'));
     }
 
     /**
@@ -134,16 +144,16 @@ class ColumnController extends Controller
     {
         $model = $request->get('model');
         switch (strtolower($model)) {
-            case 'nav':
-                $query = new Nav();
+            case 'column':
+                $query = new Column();
 
                 break;
 			case 'hasdel':
-                $query = new Nav();
+                $query = new Column();
 				$query = $query->onlyTrashed();
                 break;	
             default:
-                $query = new Nav();
+                $query = new Column();
                 break;
         }
         $res  = $query->get();

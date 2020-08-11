@@ -232,15 +232,31 @@ class AdminsTableSeeder extends Seeder
 
                     ],
                     [
-                        'name' => 'site.image',
-                        'display_name' => '图片管理',
+                        'name' => 'site.images',
+                        'display_name' => '图片附件',
                         'route' => 'site.image',
                         'icon' => 'fa-file-image-o',
                         'status' => '1', 
                         'child' => [
-                            ['icon' => 'fa-edit', 'status' => '0', 'name' => 'site.image.create', 'display_name' => '添加图片', 'route' => 'site.image.store'],
-                            ['icon' => 'fa-edit', 'status' => '0', 'name' => 'site.image.edit', 'display_name' => '编辑图片', 'route' => 'site.image.update'],
-                            ['icon' => 'fa-edit', 'status' => '0', 'name' => 'site.image.destroy', 'display_name' => '删除图片', 'route' => 'site.image.destroy'],
+                            [
+                                'name' => 'site.image',
+                                'display_name' => '图片管理',
+                                'route' => 'site.image',
+                                'icon' => 'fa-file-image-o',
+                                'status' => '1', 
+                                'child' => [
+                                    ['icon' => 'fa-edit', 'status' => '0', 'name' => 'site.image.create', 'display_name' => '添加图片', 'route' => 'site.image.store'],
+                                    ['icon' => 'fa-edit', 'status' => '0', 'name' => 'site.image.edit', 'display_name' => '编辑图片', 'route' => 'site.image.update'],
+                                    ['icon' => 'fa-edit', 'status' => '0', 'name' => 'site.image.destroy', 'display_name' => '删除图片', 'route' => 'site.image.destroy'],
+                                ]
+                            ],
+                            [
+                                'name' => 'site.images.destroy',
+                                'display_name' => '删除临时',
+                                'route' => 'site.images.destroy',
+                                'icon' => 'fa-file-image-o',
+                                'status' => '1' 
+                            ],
                         ]
                     ],
                     

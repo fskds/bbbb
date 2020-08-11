@@ -154,7 +154,7 @@
 				,layEvent = obj.event; // 获得 lay-event 对应的值
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
-                    title: '添加权限',
+                    title: '添加导航',
                     type: 2,
                     shade: 0.2,
                     shadeClose: false,
@@ -266,7 +266,7 @@
 				,layEvent = obj.event; // 获得 lay-event 对应的值
 			if (obj.event === 'edit') {  // 监听添加操作
                 var index = layer.open({
-                    title: '编辑权限',
+                    title: '编辑栏目',
                     type: 2,
                     shade: 0.2,
                     shadeClose: false,

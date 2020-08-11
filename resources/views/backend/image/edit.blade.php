@@ -13,12 +13,13 @@
         body {
             background-color: #ffffff;
         }
+        .layui-upload-img{max-width:200px;max-height:100px;}
     </style>
 </head>
 <body>
 <div class="layui-form layuimini-form">
-	<form class="layui-form" action="">
-		{{method_field('put')}}
+	<form class="layui-form" action="" >
+        {{method_field('put')}}
 		<input type="hidden" name="id" value="{{$image->id}}">
         @include('backend.image._form')
 	</form>
@@ -27,21 +28,31 @@
 <script src="/js/lay-config.js" charset="utf-8"></script>
 <script>
 
-    layui.use(['form','iconPickerFa'], function () {
+    layui.use(['form','upload'], function () {
         var $ = layui.$,
-            iconPickerFa = layui.iconPickerFa,
 			form = layui.form,
+            upload = layui.upload,
             layer = layui.layer;
 
+        var tag_token = "{{csrf_token()}}";
         var uploadInst = upload.render({
             elem: '#upload_img'
        //     ,headers: { 'X-CSRF-TOKEN': tag_token }
-            ,url: '{{route('site.image.store')}}'
-            ,auto:false //选择文件后不自动上传
-            ,bindAction: '#addsaveBtn'
+            ,url: '{{route('site.image.upload')}}'
+            ,auto:true //选择文件后不自动上传
+        //    ,bindAction: '#addsaveBtn'
             ,data: { _token: tag_token }
             ,done: function(res){
-                alert(arrayObj.join(res))
+                if(res.code==1)
+                    {
+                        $('.layui-upload-img').attr('src', "http://www.b.com/upload/" + res.msg.path + "/" + res.msg.name);
+                        $('input[name=name]').val(res.msg.name);
+                        $('input[name=path]').val(res.msg.path);
+                        $('input[name=size]').val(res.msg.size);
+                    }else{
+                        parent.layer.msg(res.msg, {icon: res.code});
+                    }
+                parent.layer.msg("临时上传成功。", {icon: res.code});
 
     //            var domian = 'http://'+window.location.host;
                 //显示图片
@@ -55,14 +66,14 @@
                 //layer.msg('上传图片错误');
             }
 
-        });
+        });   
         //监听提交
         form.on('submit(editsaveBtn)', function (data) {
 				var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引  
 				$.ajax({
 					type:'put', 
 					data:data.field, 
-					url: '{{route('admin.image.update',$image->id)}}',
+					url: '{{route('site.image.update',$image->id)}}',
 					dataType: 'json',
 					success: function (res) {
 						if(res.code ==1)

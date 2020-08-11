@@ -12,6 +12,7 @@
         body {
             background-color: #ffffff;
         }
+        .layui-upload-img{max-width:200px;max-height:100px;}
     </style>
 </head>
 <body>
@@ -34,12 +35,22 @@
         var uploadInst = upload.render({
             elem: '#upload_img'
        //     ,headers: { 'X-CSRF-TOKEN': tag_token }
-            ,url: '{{route('site.image.store')}}'
+            ,url: '{{route('site.image.upload')}}'
             ,auto:true //选择文件后不自动上传
         //    ,bindAction: '#addsaveBtn'
             ,data: { _token: tag_token }
             ,done: function(res){
-                parent.layer.msg(res.msg, {icon: res.code});
+                if(res.code==1)
+                    {
+                        $('.layui-upload-img').attr('src', "http://www.b.com/upload/" + res.msg.path + "/" + res.msg.name);
+                        $('input[name=name]').val(res.msg.name);
+                        $('input[name=path]').val(res.msg.path);
+                        $('input[name=size]').val(res.msg.size);
+                        $('input[name=title]').val(res.msg.title);
+                    }else{
+                        parent.layer.msg(res.msg, {icon: res.code});
+                    }
+                parent.layer.msg("临时上传成功。", {icon: res.code});
 
     //            var domian = 'http://'+window.location.host;
                 //显示图片
@@ -68,7 +79,6 @@
 							parent.layui.table.reload('currentTableId'); //重载表格	
 							parent.layer.close(index); //再执行关闭	
 							parent.layer.msg(res.msg, {icon: res.code});
-                            parent.location.reload(); //重载界面
 						}else{
 							parent.layer.msg(res.msg, {icon: res.code});
 						}
